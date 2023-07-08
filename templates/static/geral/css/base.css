@@ -1,0 +1,37 @@
+@import url("https://fonts.googleapis.com/css2?family=JetBrains+Mono:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;1,100;1,200;1,300;1,400;1,500;1,600&family=Montserrat:wght@400;500;600;700;800;900&family=Poppins:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500;1,600;1,700&display=swap");
+
+body {
+	background-color: #1c1a1a !important;
+	color: white !important;
+	font-family: "Poppins", sans-serif !important;
+	transition: all 0.3s ease-in-out;
+}
+
+.header-content {
+	font-family: "JetBrains Mono", sans-serif !important;
+}
+
+a:hover,
+button:hover {
+	opacity: 0.8;
+}
+
+:root {
+	--main-color: #2b2b2b;
+	--dark-color: #1c1a1a;
+	--contrast-color: #69d2cd;
+	--differential-color: #e96363;
+}
+
+::-webkit-scrollbar {
+	width: 0.8rem !important;
+}
+
+::-webkit-scrollbar-track {
+	background-color: var(--dark-color) !important;
+}
+
+::-webkit-scrollbar-thumb {
+	background-color: var(--contrast-color) !important;
+	border-radius: 0.5rem;
+}

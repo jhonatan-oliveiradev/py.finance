@@ -1,0 +1,66 @@
+{% extends 'bases/base.html' %} {% load static %} {% block 'head' %}
+<link href="{% static 'perfil/css/home.css' %}" rel="stylesheet" />
+<link href="{% static 'perfil/css/gerenciar.css' %}" rel="stylesheet" />
+<link href="{% static 'extrato/css/view_extrato.css' %}" rel="stylesheet" />
+{% endblock %} {% block 'body' %}
+<div class="container">
+	<br />
+	<br />
+	<div class="row">
+		<div class="col-md-2 text-center"></div>
+		<div class="col-md">
+			<h2 class="text-center mb-4">{{ mes_referente }}</h2>
+			<div class="card">
+				<h2 class="text-center">Total</h2>
+				<p class="fw-bold d-flex justify-content-between">
+					<span>&nbsp;</span>
+					<span>R$ {{ total_gastos }} de R$ {{ total_planejamento }}</span>
+				</p>
+				<div class="progress" style="height: 2rem">
+					<div
+						class="progress-bar bg-danger"
+						role="progressbar"
+						style="width: {{ total_gastos_percentage }}%"
+						aria-valuenow="{{ total_gastos_percentage }}"
+						aria-valuemin="0"
+						aria-valuemax="100"
+					></div>
+				</div>
+			</div>
+		</div>
+		<div class="col-md-2 text-center"></div>
+	</div>
+	<br />
+	<br />
+	<div class="row">
+		<div class="col-md-2 text-center"></div>
+		<div class="col-md">
+			<div class="card">
+				{% for categoria in categorias %}
+				<p class="fw-bold">{{ categoria }}</p>
+				<div>
+					<span style="float: left !important"
+						>R$ {{ categoria.total_gasto }}</span
+					>
+					<span style="float: right !important"
+						>R$ {{ categoria.valor_planejamento }}</span
+					>
+				</div>
+				<div class="progress">
+					<div
+						class="progress-bar progress-bar-striped bg-info"
+						role="progressbar"
+						style="width: {{ categoria.calcula_percentual_gasto_por_categoria }}%"
+						aria-valuenow="{{ categoria.calcula_percentual_gasto_por_categoria }}"
+						aria-valuemin="0"
+						aria-valuemax="100"
+					></div>
+				</div>
+				<br />
+				{% endfor %}
+			</div>
+		</div>
+		<div class="col-md-2 text-center"></div>
+	</div>
+</div>
+{% endblock %}

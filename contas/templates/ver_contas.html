@@ -1,0 +1,192 @@
+{% extends 'bases/base.html' %} {% load static %} {% block 'head' %}
+
+<link href="{% static 'perfil/css/home.css' %}" rel="stylesheet" />
+<link href="{% static 'perfil/css/gerenciar.css' %}" rel="stylesheet" />
+<style>
+	.linha-conta {
+		background-color: var(--dark-color);
+		padding: 20px;
+		border-radius: 10px;
+	}
+</style>
+{% endblock %} {% block 'body' %}
+
+<div class="container">
+	<br />
+	{% if messages %} {% for message in messages %}
+	<div class="alert {{ message.tags }}">{{ message }}</div>
+	{% endfor %} {% endif %}
+	<br />
+	<h3 class="fonte-destaque text-center text-capitalize">
+		{{ nome_mes_atual }}
+	</h3>
+	<hr />
+	<br />
+	<br />
+	<div class="row">
+		<div class="col-md-8 col-lg-8">
+			<!-- Contas a pagar -->
+			<div class="row">
+				<div class="col-md-12">
+					<p class="fonte-destaque" style="color: #f00000 !important">
+						Contas vencidas
+					</p>
+					<div class="card">
+						{% if not contas_vencidas %}
+						<p class="fonte-destaque">Ufa, nenhuma conta vencida. &#128517;</p>
+						{% else %} {% for conta in contas_vencidas %}
+						<div class="linha-conta">
+							<div
+								class="row d-flex align-items-center justify-content-between"
+							>
+								<div class="col-md text-center">{{ conta }}</div>
+								<div class="col-md text-center">
+									Dia: {{ conta.dia_pagamento }}
+								</div>
+								<div class="col-md text-center">
+									<button
+										class="botao-pagar botao-principal"
+										data-conta-id="{{ conta.id }}"
+									>
+										PAGAR
+									</button>
+								</div>
+							</div>
+						</div>
+						{% endfor %} {% endif %}
+					</div>
+					<br />
+					<br />
+					<p class="fonte-destaque" style="color: #e96363">
+						Contas próximas do vencimento
+					</p>
+					<div class="card">
+						{% if not contas_proximas_vencimento %}
+						<p class="fonte-destaque">
+							Não existem contas próximas do vencimento. &#128517;
+						</p>
+						{% else %} {% for conta in contas_proximas_vencimento %}
+						<div class="linha-conta">
+							<div
+								class="row d-flex align-items-center justify-content-between"
+							>
+								<div class="col-md text-center">{{ conta }}</div>
+								<div class="col-md text-center">
+									Dia: {{ conta.dia_pagamento }}
+								</div>
+								<div class="col-md text-center">
+									<button
+										class="botao-pagar botao-principal"
+										data-conta-id="{{ conta.id }}"
+									>
+										PAGAR
+									</button>
+								</div>
+							</div>
+						</div>
+						{% endfor %} {% endif %}
+					</div>
+					<br />
+					<br />
+					<p class="fonte-destaque">Restantes</p>
+					<div class="card">
+						{% if not restantes %}
+						<p class="fonte-destaque">Eba! Nenhuma conta restante. &#128516;</p>
+						{% else %} {% for conta in restantes %}
+						<div class="linha-conta">
+							<div
+								class="row d-flex align-items-center justify-content-between"
+							>
+								<div class="col-md text-center">{{ conta }}</div>
+								<div class="col-md text-center">
+									Dia: {{ conta.dia_pagamento }}
+								</div>
+								<div class="col-md text-center">
+									<button
+										class="botao-pagar botao-principal"
+										data-conta-id="{{ conta.id }}"
+									>
+										PAGAR
+									</button>
+								</div>
+							</div>
+						</div>
+						{% endfor %} {% endif %}
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<div class="col-md-4 col-lg-4">
+			<div class="card">
+				<div class="card-header text-center">
+					<h4 class="fonte-destaque">Relatório</h4>
+				</div>
+				<div class="card-body">
+					<div class="col-12 d-flex justify-content-between">
+						<p class="fw-bold" style="color: #f00000">Contas vencidas:</p>
+						<p id="quantidade-contas-vencidas">
+							{{ relatorio.contas_vencidas_relatorio }}
+						</p>
+					</div>
+					<div class="col-12 d-flex justify-content-between">
+						<p class="fw-bold" style="color: #e96363">
+							Próximas do vencimento:
+						</p>
+						<p id="quantidade-contas-proximas">
+							{{ relatorio.contas_proximas_vencimento_relatorio }}
+						</p>
+					</div>
+					<div class="col-12 d-flex justify-content-between">
+						<p class="fw-bold">Restantes:</p>
+						<p id="quantidade-contas-restantes">
+							{{ relatorio.restantes_relatorio }}
+						</p>
+					</div>
+					<div class="col-12 d-flex justify-content-between">
+						<p class="fw-bold" style="color: #69d2cd">Pagas:</p>
+						<p id="quantidade-total-contas">
+							{{ relatorio.total_contas_mes_relatorio }}
+						</p>
+					</div>
+				</div>
+				<div
+					class="card-footer d-flex align-items-center justify-content-center"
+				>
+					<br />
+					&nbsp;
+					<a href="{% url 'dashboard' %}" class="botao-principal">Dashboard</a>
+				</div>
+			</div>
+			<br />
+		</div>
+
+		{% comment %} {% endcomment %}
+	</div>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+	$(document).ready(function () {
+		$(".botao-pagar").click(function () {
+			var contaId = $(this).data("conta-id");
+			$.ajax({
+				url: "/contas/pagar/" + contaId + "/",
+				type: "POST",
+				success: function () {
+					// Atualizar o status da conta para "Paga" no frontend
+					$(this)
+						.closest(".linha-conta")
+						.find(".col-md.text-center")
+						.eq(1)
+						.text("Status: Paga");
+				},
+				error: function () {
+					alert("Ocorreu um erro ao processar o pagamento.");
+				}
+			});
+		});
+	});
+</script>
+
+{% endblock %}
